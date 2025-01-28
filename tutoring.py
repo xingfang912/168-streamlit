@@ -9,23 +9,25 @@ from openai import OpenAI
 
 client = OpenAI()
 
-# Step 1: Upload a File with an "assistants" purpose
-my_file = client.files.create(
-  file=open("prog3F24.docx", "rb"),
-  purpose='assistants'
-)
-print(f"This is the file object: {my_file} \n")
-
-# Step 2: Create an Assistant
+# Step 1: Create an Assistant
 my_assistant = client.beta.assistants.create(
     model="gpt-4o", #gpt-3.5-turbo-1106
     instructions="You are a Java programming tutor. Your knowledge base is a homework assignment that students is having problems about.",
-    name="Java",
+    name="Java programming tutor",
     tools=[{"type": "file_search"}]
 )
 
-# Step 3: Create a Thread
+# Step 2: Create a Thread
 my_thread = client.beta.threads.create()
+
+
+# Step 3: Upload a File with an "assistants" purpose, the file contains the
+# homework assignment from a student
+my_file = client.files.create(
+  file=open("Program 1.docx", "rb"),
+  purpose='assistants'
+)
+print(f"This is the file object: {my_file} \n")
 
 # Step 4: Add a Message to a Thread
 my_thread_message = client.beta.threads.messages.create(
