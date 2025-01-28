@@ -297,12 +297,12 @@ def variable_calculations():
             st.cache_data.clear()
 
 
-page_names_to_funcs = {
-    "—": arithmetics,
-    "Arthmetic precendence":arithmetic_precedence,
-    "Calculation with variables": variable_calculations,
+# page_names_to_funcs = {
+#     "—": arithmetics,
+#     "Arthmetic precendence":arithmetic_precedence,
+#     "Calculation with variables": variable_calculations,
     
-}
+# }
 
-demo_name = st.sidebar.selectbox("Choose a practice", page_names_to_funcs.keys())
-page_names_to_funcs[demo_name]()
+# demo_name = st.sidebar.selectbox("Choose a practice", page_names_to_funcs.keys())
+# page_names_to_funcs[demo_name]()
