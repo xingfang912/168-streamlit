@@ -8,6 +8,7 @@ Created on Tue Jul 16 14:51:30 2024
 import streamlit as st
 from arithmetics import *
 from strings import *
+from tutoring_function import *
 
 def intro():
     import streamlit as st
@@ -49,6 +50,7 @@ page_names_to_funcs = {
     "—": intro,
     "Arithmetics": arithmetics,
     "Strings":strings,
+    "Tutoring":tutoring_function,
 }
 
 demo_name = st.sidebar.selectbox("Choose a practice", page_names_to_funcs.keys())
