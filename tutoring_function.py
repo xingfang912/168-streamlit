@@ -51,11 +51,15 @@ def tutoring_function():
     
     
     if uploaded_file is not None:
+        
+        with open(uploaded_file.name, "wb") as fh:
+            fh.write(uploaded_file.getbuffer())
+            
         # st.write(uploaded_file.name)
         # Step 4: Upload a File with an "assistants" purpose, the file contains the
         # homework assignment from a student
         my_file = client.files.create(
-          file=open(uploaded_file.name,"rb"),
+           file=open(uploaded_file.name,"rb"),
           purpose='assistants'
         )
         
