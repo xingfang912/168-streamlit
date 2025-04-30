@@ -260,7 +260,7 @@ String formatted = String.format("Name: %s, Age: %d", "Alice", 25);
             completion = client.chat.completions.create(
               model="gpt-4o",
               messages=[
-                # {"role": "system", "content": "You are an experienced Java programmer."},
+                {"role": "system", "content": "You are an experienced Java instructor. Please provide Java code as your solution. If the question is about formatting output, please run the code provided in the question to make sure your solution is correct."},
                 {"role": "user", "content": prompt}
               ]
             )

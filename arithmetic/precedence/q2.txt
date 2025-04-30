@@ -1,0 +1,18 @@
+### **Question:**  
+What will be the output of the following Java program?  
+
+```java
+public class HardPrecedenceTest {
+    public static void main(String[] args) {
+        int a = 4, b = 2, c = 3;  
+        int result = a + b * c - b % a / c;
+        System.out.println("Result: " + result);
+    }
+}
+```
+
+### **Options:**  
+A) `9`  
+B) `10`  
+C) `11`  
+D) `12`  

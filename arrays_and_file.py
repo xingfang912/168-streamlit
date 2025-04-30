@@ -130,21 +130,23 @@ public class FileReadExample {
 
 
                 """)
-    # st.write("\n\n#### Choose your pratice:")            
-    # genre = st.radio(
-    #         "",
-    #         ["arithmetic precedence", "basic caculations"],
-    #         index=None,
-    #       )
+    st.write("\n\n#### Choose your pratice:")            
+    genre = st.radio(
+            "",
+            ["array basics", "file input", "file output"],
+            index=None,
+          )
     
-    # cwd = "./arithmetic/"
-    # if genre == "arithmetic precedence":
-    #     arithmetic_general(cwd+"precedence/")
-    # elif genre == "basic caculations":
-    #     arithmetic_general(cwd+"calculation/")
+    cwd = "./arrays_and_file/"
+    if genre == "array basics":
+        arrays_and_file_general(cwd+"array_basics/")
+    elif genre == "file input":
+        arrays_and_file_general(cwd+"file_input/")
+    elif genre == "file output":
+        arrays_and_file_general(cwd+"file_output/")
         
 
-def arithmetic_general(cwd):
+def arrays_and_file_general(cwd):
     from openai import OpenAI
 
     client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
@@ -232,7 +234,7 @@ def arithmetic_general(cwd):
     def get_question():
     
         # step 7. Add the user query to the exisiting thread, file is already attached
-        user_query = "Write a new problem that is similar to the example found in the file of {selected_file}\n\nPlease directly show the problem sentences without any foreword.\n\nThe new problem:\n'"
+        user_query = "Write a new problem that is similar to the example found in the file of {selected_file}\n\nPlease directly show the problem sentences without any foreword.\n\nIf the problem is about file input, make sure to include some sample data of the input file in the problem description.\n\nThe new problem:\n'"
         client.beta.threads.messages.create(
         thread_id=thread.id, role="user", content=user_query
         )
@@ -301,7 +303,7 @@ def arithmetic_general(cwd):
         completion = client.chat.completions.create(
           model="gpt-4o",
           messages=[
-            # {"role": "system", "content": "You are an experienced Java programmer."},
+            {"role": "system", "content": "You are an experienced Java instructor. Please provide Java code as your solution if necessary. Do not use lists, trees, and hashmaps in your solution. Only use arrays as the data structure."},
             {"role": "user", "content": prompt}
           ]
         )

@@ -47,40 +47,80 @@ def tutoring_function():
     # @st.cache_data
     # def file_upload():
     #     return st.file_uploader("Choose a file")
-    uploaded_file = st.file_uploader("Choose a file")
+    uploaded_files  = st.file_uploader("Choose a file", accept_multiple_files=True)
     
     
-    if uploaded_file is not None:
+    if uploaded_files:
+      results = []
+    
+      for uploaded_file in uploaded_files:
+          with open(uploaded_file.name, "wb") as fh:
+              fh.write(uploaded_file.getbuffer())  # Save the file temporarily
+
+          # Upload file
+          my_file = client.files.create(
+              file=open(uploaded_file.name, "rb"),
+              purpose="assistants"
+          )
+
+          # Step 4: Add a separate Message for each file
+          my_thread_message = client.beta.threads.messages.create(
+              thread_id=my_thread.id,
+              role="user",
+              content=f"I am having issues in figuring out the step-by-step solution to the homework problem in {uploaded_file.name}. Please show me the step-by-step solution without showing me any actual Java code.",
+              attachments=[{"file_id": my_file.id, "tools": [{"type": "file_search"}]}]
+          )
+
+          # Run the assistant for each file separately
+          run = client.beta.threads.runs.create_and_poll(
+              thread_id=my_thread.id, assistant_id=my_assistant.id
+          )
+
+          # Get the response for the current file
+          all_messages = client.beta.threads.messages.list(thread_id=my_thread.id)
+          response = all_messages.data[0].content[0].text.value
+          
+          # Store results
+          results.append(f"### **File: {uploaded_file.name}**\n{response}")
+
+      # Display results for all files
+      for result in results:
+          st.write(result)
+    
+    # uploaded_file = st.file_uploader("Choose a file")
+    
+    
+    # if uploaded_file is not None:
         
-        with open(uploaded_file.name, "wb") as fh:
-            fh.write(uploaded_file.getbuffer())
+    #     with open(uploaded_file.name, "wb") as fh:
+    #         fh.write(uploaded_file.getbuffer())
             
-        # st.write(uploaded_file.name)
-        # Step 4: Upload a File with an "assistants" purpose, the file contains the
-        # homework assignment from a student
-        my_file = client.files.create(
-           file=open(uploaded_file.name,"rb"),
-          purpose='assistants'
-        )
+    #     # st.write(uploaded_file.name)
+    #     # Step 4: Upload a File with an "assistants" purpose, the file contains the
+    #     # homework assignment from a student
+    #     my_file = client.files.create(
+    #        file=open(uploaded_file.name,"rb"),
+    #       purpose='assistants'
+    #     )
         
-        # Step 4: Add a Message to a Thread
-        my_thread_message = client.beta.threads.messages.create(
-          thread_id=my_thread.id,
-          role="user",
-          content="I am having issues in figuring out the step-by-step solution to the homework problem that I attached. Please show me the step-by-step solution without showing me any actual Java code.",
-          attachments=[{"file_id":my_file.id, "tools":[{"type": "file_search"}]}]
-        )
-        
-        
-        run = client.beta.threads.runs.create_and_poll(
-                thread_id=my_thread.id, assistant_id=my_assistant.id
-        )
-        
-        all_messages = client.beta.threads.messages.list(
-                    thread_id=my_thread.id
-                )
+    #     # Step 4: Add a Message to a Thread
+    #     my_thread_message = client.beta.threads.messages.create(
+    #       thread_id=my_thread.id,
+    #       role="user",
+    #       content="I am having issues in figuring out the step-by-step solution to the homework problem that I attached. Please show me the step-by-step solution without showing me any actual Java code.",
+    #       attachments=[{"file_id":my_file.id, "tools":[{"type": "file_search"}]}]
+    #     )
         
         
-        # st.write(f"User: {my_thread_message.content[0].text.value}")
-        st.write(f"Assistant: {all_messages.data[0].content[0].text.value}")
+    #     run = client.beta.threads.runs.create_and_poll(
+    #             thread_id=my_thread.id, assistant_id=my_assistant.id
+    #     )
+        
+    #     all_messages = client.beta.threads.messages.list(
+    #                 thread_id=my_thread.id
+    #             )
+        
+        
+    #     # st.write(f"User: {my_thread_message.content[0].text.value}")
+    #     st.write(f"Assistant: {all_messages.data[0].content[0].text.value}")
     
